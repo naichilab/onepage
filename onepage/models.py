@@ -1,7 +1,7 @@
 from orator import DatabaseManager, Model
 from orator.orm import scope
 
-from db import dbconfig
+from onepage.db import dbconfig
 
 
 db = DatabaseManager(dbconfig.DATABASES)
@@ -16,4 +16,4 @@ class User(Model):
 
     @scope
     def find_by_email(self, query, email):
-        return query.where_email(email).get()
+        return query.where_email(email).get().first()
