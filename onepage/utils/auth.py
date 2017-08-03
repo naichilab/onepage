@@ -1,4 +1,6 @@
-from flask import session
+from functools import wraps
+
+from flask import session, redirect, url_for
 from passlib.hash import argon2
 from orator.exceptions.query import QueryException
 
@@ -24,15 +26,25 @@ def can_signup(email, password, pen_name):
 
 
 def activate_session(email):
-    session[email] = True
+    session['logged_in'] = email
 
 
-def inactivate_session(email):
-    session.pop(email, None)
+def inactivate_session():
+    session.pop('logged_in', None)
 
 
-def is_authenticated(email):
-    return email in session
+def required_login(func):
+    """Decorator for check login state
+        if not logged in, redirect to login page.
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if 'logged_in' in session:
+            return func(*args, **kwargs)
+        else:
+            return redirect(url_for('login.get_login'))
+
+    return wrapper
 
 
 def create_user(email, password, pen_name):
