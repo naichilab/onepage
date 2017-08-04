@@ -1,5 +1,5 @@
 from orator import DatabaseManager, Model
-from orator.orm import scope
+#from orator.orm import scope
 
 from onepage.db import dbconfig
 
@@ -14,6 +14,6 @@ class User(Model):
     __guarded__ = ['email', 'password_hash']
     __timestamps__ = False
 
-    @scope
-    def find_by_email(self, query, email):
-        return query.where_email(email).get().first()
+    @classmethod
+    def find_by_email(cls, email):
+        return cls.query().where_email(email).get().first()
