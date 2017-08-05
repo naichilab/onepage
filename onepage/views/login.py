@@ -16,7 +16,7 @@ def post_login():
         auth.activate_session(request.form['email'])
         return redirect(url_for('novel.get_list'))
     else:
-        return redirect(url_for('login.get_login'))
+        return render_template('login/login.html')
 
 
 @app.route('/logout', methods=['post'])

@@ -22,7 +22,7 @@ def can_signup(email, password, pen_name):
     """
 
     # TODO validate detail rule
-    return email is not None and password is not None and pen_name is not None
+    return email != '' and password != '' and pen_name != ''
 
 
 def activate_session(email):

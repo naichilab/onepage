@@ -33,4 +33,4 @@ class TestAuth(TestCase):
         assert auth.can_login(TARGET_EMAIL, TARGET_PASSWORD) is True
 
     def test_can_signup(self):
-        assert auth.can_signup(None, None, None) is False
+        assert auth.can_signup('', '', '') is False
