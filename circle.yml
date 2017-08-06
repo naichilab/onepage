@@ -1,0 +1,20 @@
+machine:
+    python:
+        version: 3.6.2
+    services:
+        - mysql
+database:
+    override:
+        - mysql -u root -e "CREATE DATABASE onepage"
+dependencies:
+    override:
+        - pip install -r requirements.txt
+test:
+    override:
+        - python -m unittest
+    post:
+        - coverage run -m unittest
+        - coverage html
+        - mv coverage_artifacts $CIRCLE_ARTIFACTS/coverage_artifacts
+        - bandit -r onepage/ -f html -o bandit_artifacts.html -c bandit.yml
+        - mv bandit_artifacts.html $CIRCLE_ARTIFACTS/
