@@ -16,5 +16,5 @@ test:
         - coverage run -m unittest
         - coverage html
         - mv coverage_artifacts $CIRCLE_ARTIFACTS/coverage_artifacts
-        - bandit -r onepage/ -f html -o bandit_artifacts.html
+        - bandit -r onepage/ -f html -o bandit_artifacts.html -c bandit.yml
         - mv bandit_artifacts.html $CIRCLE_ARTIFACTS/
