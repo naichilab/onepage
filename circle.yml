@@ -9,6 +9,7 @@ database:
 dependencies:
     override:
         - pip install -r requirements.txt
+        - yarn --ignore-engines
 test:
     override:
         - python -m unittest
