@@ -4,5 +4,12 @@
         <input type=submit value=Logout>
 </form>   
 
-novel list page
+<a href='<< url_for('novel.get_write') >>'> 小説を書く </a> <br>
+
+novel list page <br>
+
+<% for novel in novels %>
+    <a href="<< url_for('novel.get_detail', novel_id=novel.id) >>"> << novel.title >> </a> <br>
+<% endfor %>
+
 <% endblock %>
