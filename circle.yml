@@ -12,9 +12,8 @@ dependencies:
         - yarn --ignore-engines
 test:
     override:
-        - python -m unittest
-    post:
         - coverage run -m unittest
+    post:
         - coverage html
         - mv coverage_artifacts $CIRCLE_ARTIFACTS/coverage_artifacts
         - bandit -r onepage/ -f html -o bandit_artifacts.html -c bandit.yml
