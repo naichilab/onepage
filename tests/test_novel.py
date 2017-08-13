@@ -23,10 +23,14 @@ class TestNovel(TestCase):
         return mock_novel
 
     def test_get_novel_list(self):
+        Novel.page_count = Mock(return_value=1)
+        Novel.pagenation = Mock(return_value=[self._create_mock_novel])
         self.client.get('/novel/list')
         self.assertTemplateUsed('novel/list.html')
 
     def test_get_novel_list_specified_page(self):
+        Novel.page_count = Mock(return_value=1)
+        Novel.pagenation = Mock(return_value=[self._create_mock_novel])
         self.client.get('/novel/list/1')
         self.assertTemplateUsed('novel/list.html')
 
