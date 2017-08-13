@@ -39,12 +39,16 @@ def required_login(func):
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if 'logged_in' in session:
+        if check_session():
             return func(*args, **kwargs)
         else:
             return redirect(url_for('login.get_login'))
 
     return wrapper
+
+
+def check_session():
+    return 'logged_in' in session
 
 
 def create_user(email, password, pen_name):
