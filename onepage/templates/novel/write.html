@@ -2,9 +2,9 @@
 <% block body %>
 小説を書く
 
-<form action="<< url_for('novel.post_write') >>" method=post>
-    <input type=text name=title>
-    <input type=text name=text>
+<form action="<% if novel is none %><< url_for('novel.post_write') >><% else %><< url_for('novel.post_edit', novel_id=novel.id) >><% endif %>" method=post>
+    <input type=text name=title <% if novel is not none %>value="<< novel.title >>" <% endif %>>
+    <input type=text name=text <% if novel is not none %>value="<< novel.text >>" <% endif %>>
     <input type=submit value=Post>
 </form>
 <% endblock %>

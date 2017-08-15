@@ -9,6 +9,7 @@ from flask import abort
 from onepage.models import Novel
 from onepage.models import User
 from onepage.utils.auth import required_login
+from onepage.utils.auth import only_author
 
 app = Blueprint('novel', __name__, template_folder='templates', url_prefix='/novel')
 
@@ -17,27 +18,27 @@ app = Blueprint('novel', __name__, template_folder='templates', url_prefix='/nov
 @app.route('/list/<int:page>', methods=['get'])
 def get_list(page=1):
     count = Novel.page_count()
-    if page > count or page <= 0:
+    if (count > 0 and page > count) or page <= 0:
         abort(404)
 
     novels = Novel.pagenation(int(page)) if count > 0 else []
     return render_template('novel/list.html', page_count=count, novels=novels)
 
 
-@app.route('/<novel_id>', methods=['get'])
+@app.route('/<int:novel_id>', methods=['get'])
 def get_detail(novel_id):
     novel = Novel.find(novel_id)
     if novel is not None:
         return render_template('novel/detail.html', novel=novel)
     else:
         # TODO: change custom error page
-        raise abort(404)
+        abort(404)
 
 
 @app.route('/write', methods=['get'])
 @required_login
 def get_write():
-    return render_template('novel/write.html')
+    return render_template('novel/write.html', novel=None)
 
 
 @app.route('/write', methods=['post'])
@@ -53,3 +54,29 @@ def post_write():
     novel.save()
 
     return redirect(url_for('novel.get_detail', novel_id=novel.id))
+
+
+@app.route('/edit/<int:novel_id>', methods=['get'])
+@required_login
+@only_author
+def get_edit(novel_id):
+    novel = Novel.find(novel_id)
+    if novel is not None:
+        return render_template('novel/write.html', novel=novel)
+    else:
+        # TODO: change custom error page
+        abort(404)
+
+
+@app.route('/edit/<int:novel_id>', methods=['post'])
+@required_login
+@only_author
+def post_edit(novel_id):
+    novel = Novel.find(novel_id)
+    if novel is not None:
+        novel.title = request.form.get('title')
+        novel.text = request.form.get('text')
+        novel.save()
+        return redirect(url_for('novel.get_detail', novel_id=novel.id))
+    else:
+        abort(400)

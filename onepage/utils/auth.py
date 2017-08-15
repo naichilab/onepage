@@ -1,10 +1,12 @@
 from functools import wraps
 
 from flask import session, redirect, url_for
+from flask import abort
 from passlib.hash import argon2
 from orator.exceptions.query import QueryException
 
 from onepage.models import User
+from onepage.models import Novel
 
 
 def can_login(email, password):
@@ -49,6 +51,26 @@ def required_login(func):
 
 def check_session():
     return 'logged_in' in session
+
+
+def only_author(func):
+    """Decorator for check author
+        if not author, redirect to not found page
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if check_author(kwargs):
+            return func(*args, **kwargs)
+        else:
+            abort(404)
+
+    return wrapper
+
+
+def check_author(kwargs):
+    novel = Novel.find(kwargs.get('novel_id'))
+    print(session.get('logged_in'))
+    return novel.user.email == session.get('logged_in') if novel is not None else False
 
 
 def create_user(email, password, pen_name):
