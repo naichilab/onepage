@@ -1,0 +1,10 @@
+<% extends "layout.html" %>
+<% block body %>
+小説を書く
+
+<form action="<< url_for('novel.post_write') >>" method=post>
+    <input type=text name=title>
+    <input type=text name=text>
+    <input type=submit value=Post>
+</form>
+<% endblock %>
